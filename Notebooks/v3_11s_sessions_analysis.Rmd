@@ -3,7 +3,7 @@ title: "v3 coaching attendance analysis: counts of sessions"
 output: html_notebook
 ---
 
-```{r setup, include=FALSE, cache=TRUE}
+```{r setup}
 packages <- c("dplyr", "ggplot2", "tidyr", "readr", "knitr", "stringr", "lubridate", "here")
 
 # Install the packages (if not already installed)
@@ -20,7 +20,7 @@ lapply(packages, library, character.only = TRUE)
 
 ```{r}
 attendance_11s_raw <- read.csv(here("Datasets", "1_1attendance.csv"))
-n_distinct(attendance_11s_raw$external_identifier) # 2708
+n_distinct(attendance_11s_raw$external_identifier)
 head(attendance_11s_raw)
 ```
 
