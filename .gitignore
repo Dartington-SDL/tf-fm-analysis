@@ -59,4 +59,4 @@ Datasets/**.*
 Graphs/**.*
 
 # Everything in the Output_data folder
-Output_data/**.*
+Output_data/**.csv
