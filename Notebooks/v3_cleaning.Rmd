@@ -77,6 +77,10 @@ v3_dem_r4w <- v3_dem_r4w_raw %>%
 
 # Tidy 'cohort'
 v3_dem_r4w$cohort <- gsub("Class ", "", v3_dem_r4w$cohort)
+
+# Save to CSV
+file_path_step_1 <- here("Output_data", "v3_dem_r4w_step_1_tidy_cols.csv")
+write.csv(v3_dem_r4w, file_path_step_1, row.names = FALSE)
 ```
 
 ## Step 2: Correct data types
@@ -100,6 +104,10 @@ na_replacement_cols <- c("cohort", "case_status", "postcode", "city", "gender", 
 for (col in na_replacement_cols) {
   v3_dem_r4w[[col]][v3_dem_r4w[[col]] == ""] <- NA
 }
+
+# Save to CSV
+file_path_step_3 <- here("Output_data", "v3_dem_r4w_step_3_handle_nas.csv")
+write.csv(v3_dem_r4w, file_path_step_3, row.names = FALSE)
 ```
 ## Step 4: Assigning region based on postcode
 ```{r}
@@ -166,6 +174,9 @@ v3_followups <- v3_followups_raw %>%
   )
 
 print(v3_followups)
+# Save to CSV
+file_path_followups_step_1 <- here("Output_data", "v3_followups_step_1_tidy_cols.csv")
+write.csv(v3_followups, file_path_followups_step_1, row.names = FALSE)
 ```
 
 ## Step 2: Handling missing values
@@ -183,6 +194,10 @@ for (col in na_replacement_followups_2) {
 }
 
 print(v3_followups)
+
+# Save to CSV
+file_path_followups_step_2 <- here("Output_data", "v3_followups_step_2_handle_nas.csv")
+write.csv(v3_followups, file_path_followups_step_2, row.names = FALSE)
 ```
 
 ## Step 3: Tidy columns
@@ -229,6 +244,7 @@ cat("Number of replacements to be made:", num_replacements, "\n") # Prints the t
 
 # Replacement
 v3_followups$followup_period[v3_followups$class == "2021" & v3_followups$followup_period == "Y12-Q2"] <- "Y12-Q1"
+v3_followups
 ```
 
 # Filtering 
@@ -243,6 +259,11 @@ v3_followups <- v3_followups %>%
 
 after_recent_entry_selection_count <- nrow(v3_followups) # Number of records after step 1
 cat("Removed:", initial_count - after_recent_entry_selection_count, "records\n") # Print the number of records removed
+
+# Save to CSV
+file_path_followups_filter_step_1 <- here("Output_data", "v3_followups_filter_step_1_keep_most_recent_entry.csv")
+write.csv(v3_followups, file_path_followups_filter_step_1, row.names = FALSE)
+v3_followups
 ```
 
 ## Step 2: Remove duplicates with the same date for each UPN
@@ -256,6 +277,11 @@ v3_followups <- v3_followups %>%
 
 after_duplicate_removal_count <- nrow(v3_followups) # Number of records after step 2
 cat("Removed:", initial_count_step_2 - after_duplicate_removal_count, "records\n") # Output the number of records removed
+
+# Save to CSV
+file_path_followups_filter_step_2 <- here("Output_data", "v3_followups_filter_step_2_remove_duplicates.csv")
+write.csv(v3_followups, file_path_followups_filter_step_2, row.names = FALSE)
+v3_followups
 ```
 
 ## Step 3: Check for any remaining duplicates
@@ -285,6 +311,10 @@ cat("Removed:", initial_count_step_4 - after_na_filter_count, "records\n") # Out
 cat("Count of unique UPNs after filtering:", n_distinct(filtered_v3_followups$upn), "\n") # Output the count of unique UPNs after filtering
 
 print(filtered_v3_followups)
+
+# Save to CSV
+file_path_followups_filter_step_4 <- here("Output_data", "v3_followups_filter_step_4_handle_nas.csv")
+write.csv(filtered_v3_followups, file_path_followups_filter_step_4, row.names = FALSE)
 ```
 
 # Assign follow-up status
@@ -302,6 +332,10 @@ v3_status <- filtered_v3_followups %>%
   group_by(followup_period, status)
 
 print(v3_status)
+
+# Save to CSV
+file_path_followup_status_step_1 <- here("Output_data", "v3_status_step_1.csv")
+write.csv(v3_status, file_path_followup_status_step_1, row.names = FALSE)
 ```
 
 ## Step 2: Identify UPNs with a baseline record 
@@ -314,6 +348,10 @@ upns_with_y12q1 <- v3_status %>%
   distinct()
 
 print(upns_with_y12q1)
+
+# Save to CSV
+file_path_followup_status_step_2_upns <- here("Output_data", "v3_status_step_2_upns.csv")
+write.csv(upns_with_y12q1, file_path_followup_status_step_2_upns, row.names = FALSE)
 ```
 
 ```{r}
@@ -331,4 +369,11 @@ status_counts_y12q1 <- v3_status %>%
 # Print new dataframes
 print(all_records_with_y12q1)
 print(status_counts_y12q1)
+
+# Save to CSV
+file_path_to_followup_status_step_2_all_records <- here("Output_data", "v3_status_step_2_all_records_with_y12q1.csv")
+write.csv(all_records_with_y12q1, file_path_to_followup_status_step_2_all_records, row.names = FALSE)
+
+file_path_followup_status_step_2_counts <- here("Output_data", "v3_status_step_2_counts.csv")
+write.csv(status_counts_y12q1, file_path_followup_status_step_2_counts, row.names = FALSE)
 ```

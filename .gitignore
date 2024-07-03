@@ -57,3 +57,6 @@ Datasets/**.*
 
 # Everything in the Graphs folder
 Graphs/**.*
+
+# Everything in the Output_data folder
+Output_data/**.*
